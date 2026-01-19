@@ -2,6 +2,8 @@ import { Text } from '@react-three/drei';
 
 import type { Vector3 } from '@orbital';
 
+import { useUIStore } from '@stores/ui';
+
 import { MainBody, type MainBodyProps } from './MainBody';
 import { NavigationLight, type NavigationLightProps } from './NavigationLight';
 import { SolarPanel, type SolarPanelProps } from './SolarPanel';
@@ -49,9 +51,18 @@ export function Spacecraft({
   label,
   labelColor = '#ffffff',
 }: SpacecraftProps) {
+  const zoomScale = useUIStore((s) => s.zoomScale);
+
+  // Scale emissive intensity by zoom with sqrt curve for smoother transitions
+  const emissiveScale = Math.max(0.3, Math.min(1, Math.sqrt(zoomScale)));
+  const scaledMainBody = {
+    ...mainBody,
+    emissiveIntensity: (mainBody.emissiveIntensity ?? 0) * emissiveScale,
+  };
+
   return (
     <group position={position} scale={[scale, scale, scale]}>
-      <MainBody {...mainBody} />
+      <MainBody {...scaledMainBody} />
 
       {arms.map((arm, index) => (
         <Arm key={`arm-${index}`} {...arm} />
@@ -62,7 +73,11 @@ export function Spacecraft({
       ))}
 
       {navigationLights.map((light, index) => (
-        <NavigationLight key={`light-${index}`} {...light} />
+        <NavigationLight
+          key={`light-${index}`}
+          {...light}
+          intensity={(light.intensity ?? 2) * emissiveScale}
+        />
       ))}
 
       {label && (

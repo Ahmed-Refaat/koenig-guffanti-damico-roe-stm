@@ -24,8 +24,8 @@ export default function ZoomScaleUpdater() {
     const scale = distance / baseDistance;
     const clamped = Math.max(minScale, Math.min(maxScale, scale));
 
-    // Always update on first frame (null), then only when changed significantly
-    if (prevScale.current === null || Math.abs(clamped - prevScale.current) > 0.01) {
+    // Update every frame for smooth scaling (avoid jitter from batched updates)
+    if (prevScale.current !== clamped) {
       prevScale.current = clamped;
       setZoomScale(clamped);
     }

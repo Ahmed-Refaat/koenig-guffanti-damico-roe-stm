@@ -47,7 +47,7 @@ export default function Scene({
         near: 0.1,
         far: maxZoomOut * 2,
       }}
-      gl={{ antialias: true }}
+      gl={{ antialias: true, logarithmicDepthBuffer: true }}
     >
       <color attach="background" args={['#000000']} />
 
