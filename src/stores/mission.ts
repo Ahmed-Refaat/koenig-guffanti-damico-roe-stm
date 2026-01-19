@@ -101,7 +101,6 @@ export const useMissionStore = create<MissionStore>()(
     addWaypoint: (position) => {
       const state = get();
       const newWaypoints = [...state.waypoints, { position }];
-      const newIndex = newWaypoints.length - 1;
       const { missionPlan, trajectoryPoints, error } = computeMission(
         newWaypoints,
         state.chief,
@@ -113,12 +112,12 @@ export const useMissionStore = create<MissionStore>()(
         state.deyDotDrag,
         state.scenario
       );
-      // Auto-select the newly added waypoint
+      // Do not auto-select newly added waypoint
       set({
         waypoints: newWaypoints,
         missionPlan,
         trajectoryPoints,
-        selectedWaypointIndex: newIndex,
+        selectedWaypointIndex: null,
         lastError: error,
       });
     },
