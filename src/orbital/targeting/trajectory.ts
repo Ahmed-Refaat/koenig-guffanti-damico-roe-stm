@@ -265,7 +265,7 @@ export const sampleTrajectoryUniform = (
  * @param time - Target time
  * @returns Interpolated point or null if time is out of bounds
  */
-const interpolateTrajectory = (
+export const interpolateTrajectory = (
   trajectory: readonly TrajectoryPoint[],
   time: number
 ): TrajectoryPoint | null => {

@@ -56,6 +56,7 @@ export {
   generateLegTrajectory,
   generateMissionTrajectory,
   generateTrajectoryWithManeuvers,
+  interpolateTrajectory,
   sampleTrajectoryUniform,
 } from './targeting/trajectory';
 

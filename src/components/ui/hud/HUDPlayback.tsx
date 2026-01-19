@@ -30,7 +30,7 @@ export default function HUDPlayback() {
   const totalTime = missionPlan?.totalTime ?? 0;
 
   const handleScrub = (newTime: number) => {
-    setTime(newTime, trajectoryPoints);
+    setTime(newTime);
   };
 
   return (

@@ -5,6 +5,8 @@ import App from './App.tsx';
 
 import './index.css';
 
+import './stores/sync';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

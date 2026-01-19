@@ -2,11 +2,11 @@ import { useMemo, useState } from 'react';
 
 import { GripHorizontal, Minus } from 'lucide-react';
 
-import type { Vector3 } from '@orbital';
+import { interpolateTrajectory, type Vector3 } from '@orbital';
 
 import { useHotkey } from '@hooks/useHotkey';
 import { useMissionStore } from '@stores/mission';
-import { useSimulationStore } from '@stores/simulation';
+import { findNearestPointIndex, useSimulationStore } from '@stores/simulation';
 import { useUIStore } from '@stores/ui';
 import { computeDistance, computeDistanceTraveled } from '@utils/metrics';
 
@@ -28,7 +28,6 @@ export default function HUD() {
   // Simulation state
   const time = useSimulationStore((s) => s.time);
   const playing = useSimulationStore((s) => s.playing);
-  const currentPointIndex = useSimulationStore((s) => s.currentPointIndex);
 
   // Local UI state
   const [minimized, setMinimized] = useState(false);
@@ -36,40 +35,34 @@ export default function HUD() {
   // Current position/velocity from trajectory or initial
   const isSimulating = time > 0 || playing;
   const hasTrajectory = trajectoryPoints.length > 0;
-  const validIndex =
-    currentPointIndex >= 0 && currentPointIndex < trajectoryPoints.length;
 
   const currentPosition = useMemo(() => {
-    return isSimulating && hasTrajectory && validIndex
-      ? trajectoryPoints[currentPointIndex].position
-      : initialPosition;
-  }, [
-    isSimulating,
-    hasTrajectory,
-    validIndex,
-    trajectoryPoints,
-    currentPointIndex,
-    initialPosition,
-  ]);
+    if (isSimulating && hasTrajectory) {
+      const interpolated = interpolateTrajectory(trajectoryPoints, time);
+      if (interpolated) {
+        return interpolated.position;
+      }
+    }
+    return initialPosition;
+  }, [isSimulating, hasTrajectory, trajectoryPoints, time, initialPosition]);
 
   const currentVelocity = useMemo<Vector3>(() => {
-    return isSimulating && hasTrajectory && validIndex
-      ? trajectoryPoints[currentPointIndex].velocity
-      : [0, 0, 0];
-  }, [
-    isSimulating,
-    hasTrajectory,
-    validIndex,
-    trajectoryPoints,
-    currentPointIndex,
-  ]);
+    if (isSimulating && hasTrajectory) {
+      const interpolated = interpolateTrajectory(trajectoryPoints, time);
+      if (interpolated) {
+        return interpolated.velocity;
+      }
+    }
+    return [0, 0, 0];
+  }, [isSimulating, hasTrajectory, trajectoryPoints, time]);
 
   const distance = computeDistance(currentPosition);
 
   const distanceTraveled = useMemo(() => {
     if (!isSimulating || !hasTrajectory) return 0;
+    const currentPointIndex = findNearestPointIndex(trajectoryPoints, time);
     return computeDistanceTraveled(trajectoryPoints, currentPointIndex);
-  }, [isSimulating, hasTrajectory, trajectoryPoints, currentPointIndex]);
+  }, [isSimulating, hasTrajectory, trajectoryPoints, time]);
 
   if (!hudVisible) return null;
 

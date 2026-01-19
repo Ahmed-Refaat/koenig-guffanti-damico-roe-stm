@@ -1,3 +1,7 @@
+import { useMemo } from 'react';
+
+import { interpolateTrajectory } from '@orbital';
+
 import { useZoomScale } from '@hooks/useZoomScale';
 import { useMissionStore } from '@stores/mission';
 import { useSimulationStore } from '@stores/simulation';
@@ -11,22 +15,22 @@ export default function Deputy() {
   const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);
 
   const playing = useSimulationStore((state) => state.playing);
-  const currentPointIndex = useSimulationStore(
-    (state) => state.currentPointIndex
-  );
   const time = useSimulationStore((state) => state.time);
 
   // When simulation is active (time > 0 or playing), use trajectory position
   // Otherwise use initial position
   const isSimulating = time > 0 || playing;
   const hasTrajectory = trajectoryPoints.length > 0;
-  const validIndex =
-    currentPointIndex >= 0 && currentPointIndex < trajectoryPoints.length;
 
-  const position =
-    isSimulating && hasTrajectory && validIndex
-      ? trajectoryPoints[currentPointIndex].position
-      : initialPosition;
+  const position = useMemo(() => {
+    if (isSimulating && hasTrajectory) {
+      const interpolated = interpolateTrajectory(trajectoryPoints, time);
+      if (interpolated) {
+        return interpolated.position;
+      }
+    }
+    return initialPosition;
+  }, [isSimulating, hasTrajectory, trajectoryPoints, time, initialPosition]);
 
   return (
     <Spacecraft

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 
 import type {
   ClassicalOrbitalElements,
@@ -16,9 +17,7 @@ import {
   validateTargetingConfig,
 } from '@orbital';
 
-import { type ScenarioKey,SCENARIOS } from '@config/scenarios';
-
-import { useSimulationStore } from './simulation';
+import { type ScenarioKey, SCENARIOS } from '@config/scenarios';
 
 // Default scenario
 const DEFAULT_SCENARIO: ScenarioKey = 'iss';
@@ -269,7 +268,8 @@ function computeMissionIncremental(
   }
 }
 
-export const useMissionStore = create<MissionStore>((set, get) => ({
+export const useMissionStore = create<MissionStore>()(
+  subscribeWithSelector((set, get) => ({
   // Initial state
   chief: SCENARIOS[DEFAULT_SCENARIO].chief,
   initialPosition: SCENARIOS[DEFAULT_SCENARIO].initialPosition,
@@ -483,8 +483,6 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
 
   setScenario: (key) => {
     const scenario = SCENARIOS[key];
-    // Reset simulation state immediately (avoids timing issues with useEffect)
-    useSimulationStore.getState().reset();
     // Clear waypoints and reset ALL physics settings when scenario changes
     set({
       scenario: key,
@@ -513,4 +511,4 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   clearError: () => {
     set({ lastError: null });
   },
-}));
+})));

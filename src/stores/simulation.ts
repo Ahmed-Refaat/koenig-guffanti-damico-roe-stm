@@ -54,8 +54,6 @@ interface SimulationState {
   playing: boolean;
   /** Playback speed multiplier (1, 2, 5, 10) */
   speed: number;
-  /** Current index into trajectory points array */
-  currentPointIndex: number;
 }
 
 interface SimulationActions {
@@ -68,13 +66,9 @@ interface SimulationActions {
   /** Set playback speed */
   setSpeed: (speed: number) => void;
   /** Set time directly (for scrubbing) */
-  setTime: (time: number, trajectoryPoints: readonly TrajectoryPoint[]) => void;
+  setTime: (time: number) => void;
   /** Advance time by delta (called from animation loop) */
-  tick: (
-    dt: number,
-    trajectoryPoints: readonly TrajectoryPoint[],
-    totalTime: number
-  ) => void;
+  tick: (dt: number, totalTime: number) => void;
 }
 
 type SimulationStore = SimulationState & SimulationActions;
@@ -88,7 +82,6 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
   time: 0,
   playing: false,
   speed: 1,
-  currentPointIndex: 0,
 
   // Actions
   play: () => set({ playing: true }),
@@ -100,21 +93,16 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
       time: 0,
       playing: false,
       speed: 1,
-      currentPointIndex: 0,
     }),
 
   setSpeed: (speed) => set({ speed }),
 
-  setTime: (time, trajectoryPoints) => {
+  setTime: (time) => {
     const clampedTime = Math.max(0, time);
-    const currentPointIndex = findNearestPointIndex(
-      trajectoryPoints,
-      clampedTime
-    );
-    set({ time: clampedTime, currentPointIndex });
+    set({ time: clampedTime });
   },
 
-  tick: (dt, trajectoryPoints, totalTime) => {
+  tick: (dt, totalTime) => {
     const state = get();
     if (!state.playing) return;
 
@@ -125,12 +113,10 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
       set({
         time: totalTime,
         playing: false,
-        currentPointIndex: trajectoryPoints.length - 1,
       });
       return;
     }
 
-    const currentPointIndex = findNearestPointIndex(trajectoryPoints, newTime);
-    set({ time: newTime, currentPointIndex });
+    set({ time: newTime });
   },
 }));
