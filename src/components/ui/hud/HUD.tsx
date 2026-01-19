@@ -6,9 +6,9 @@ import { interpolateTrajectory, type Vector3 } from '@orbital';
 
 import { useHotkey } from '@hooks/useHotkey';
 import { useMissionStore } from '@stores/mission';
-import { findNearestPointIndex, useSimulationStore } from '@stores/simulation';
+import { useSimulationStore } from '@stores/simulation';
 import { useUIStore } from '@stores/ui';
-import { computeDistance, computeDistanceTraveled } from '@utils/metrics';
+import { computeDistance, computeDistanceTraveled, findNearestPointIndex } from '@utils/metrics';
 
 import HUDMetrics from './HUDMetrics';
 import HUDPlayback from './HUDPlayback';

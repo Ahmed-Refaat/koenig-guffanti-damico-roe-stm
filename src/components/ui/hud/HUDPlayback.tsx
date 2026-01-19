@@ -1,7 +1,8 @@
 import { Pause, Play, RotateCcw } from 'lucide-react';
 
 import { useMissionStore } from '@stores/mission';
-import { formatTime,useSimulationStore } from '@stores/simulation';
+import { useSimulationStore } from '@stores/simulation';
+import { formatTime } from '@utils/formatting';
 
 import Button from '../../shared/controls/Button';
 import Select from '../../shared/controls/Select';

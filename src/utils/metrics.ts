@@ -1,4 +1,4 @@
-import type { Vector3 } from '@orbital';
+import type { TrajectoryPoint, Vector3 } from '@orbital';
 
 /**
  * Compute distance from origin (Chief is at origin)
@@ -59,4 +59,31 @@ export function computeDistanceTraveled(
   }
 
   return total;
+}
+
+/**
+ * Binary search for the trajectory point closest to the given time.
+ * Returns the index of the point with time <= target time.
+ */
+export function findNearestPointIndex(
+  points: readonly TrajectoryPoint[],
+  time: number
+): number {
+  if (points.length === 0) return -1;
+  if (time <= points[0].time) return 0;
+  if (time >= points[points.length - 1].time) return points.length - 1;
+
+  let lo = 0;
+  let hi = points.length - 1;
+
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi + 1) / 2);
+    if (points[mid].time <= time) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  return lo;
 }
