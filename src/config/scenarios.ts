@@ -29,10 +29,14 @@ export interface Scenario {
   gridSectionSize: number;
   /** Initial camera Z distance in meters */
   cameraDistance: number;
+  /** Minimum zoom in distance for OrbitControls */
+  minZoomIn: number;
   /** Maximum zoom out distance for OrbitControls */
   maxZoomOut: number;
   /** Number of trajectory points per leg for visualization smoothness */
   trajectoryPointsPerLeg: number;
+  /** Visual scale multiplier for spacecraft/waypoints at this scenario's scale */
+  visualScale: number;
 }
 
 export const SCENARIOS: Record<ScenarioKey, Scenario> = {
@@ -57,8 +61,10 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridCellSize: 50,
     gridSectionSize: 250,
     cameraDistance: 1500,
+    minZoomIn: 50,
     maxZoomOut: 5000,
     trajectoryPointsPerLeg: 500,
+    visualScale: 1,
   },
   eccentric: {
     label: 'High-Alt Eccentric',
@@ -81,8 +87,10 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridCellSize: 50,
     gridSectionSize: 250,
     cameraDistance: 1500,
+    minZoomIn: 50,
     maxZoomOut: 5000,
     trajectoryPointsPerLeg: 500,
+    visualScale: 1,
   },
   lowAltEccentric: {
     label: 'Low-Alt Eccentric',
@@ -105,8 +113,10 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridCellSize: 50,
     gridSectionSize: 250,
     cameraDistance: 1500,
+    minZoomIn: 50,
     maxZoomOut: 5000,
     trajectoryPointsPerLeg: 500,
+    visualScale: 1,
   },
   longDurationHold: {
     label: 'Long-Duration Hold',
@@ -129,8 +139,10 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridCellSize: 50,
     gridSectionSize: 250,
     cameraDistance: 1500,
+    minZoomIn: 50,
     maxZoomOut: 5000,
     trajectoryPointsPerLeg: 500,
+    visualScale: 1,
   },
   largeFormation: {
     label: 'Large Formation (10km)',
@@ -154,8 +166,10 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridCellSize: 500, // 500m cells
     gridSectionSize: 2500, // 2.5km major lines
     cameraDistance: 15000,
+    minZoomIn: 50,
     maxZoomOut: 50000, // Allow 50km zoom
     trajectoryPointsPerLeg: 5000, // More points for smoother km-scale trajectories
+    visualScale: 10, // Larger scale for km-scale formations
   },
 };
 

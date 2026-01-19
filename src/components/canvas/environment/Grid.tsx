@@ -43,7 +43,7 @@ export default function Grid({
     for (let d = -half; d <= half; d += markerInterval) {
       if (d !== 0) {
         result.push({
-          position: [-markerOffset * 1.5, d, 0],
+          position: [-markerOffset, d, 0],
           label: `${d}`,
           axis: 'R',
         });

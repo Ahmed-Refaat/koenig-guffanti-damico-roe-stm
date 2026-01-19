@@ -8,14 +8,16 @@ import { useMissionStore } from '@stores/mission';
 interface SceneProps {
   children?: ReactNode;
   cameraDistance?: number;
+  minZoomIn?: number;
   maxZoomOut?: number;
 }
 
 interface ControlsProps {
+  minZoomIn: number;
   maxZoomOut: number;
 }
 
-function Controls({ maxZoomOut }: ControlsProps) {
+function Controls({ minZoomIn, maxZoomOut }: ControlsProps) {
   const isDragging = useMissionStore((s) => s.isDraggingWaypoint);
   const hasSelection = useMissionStore((s) => s.selectedWaypointIndex !== null);
 
@@ -24,7 +26,7 @@ function Controls({ maxZoomOut }: ControlsProps) {
       enabled={!isDragging && !hasSelection}
       enableDamping
       dampingFactor={0.05}
-      minDistance={50}
+      minDistance={minZoomIn}
       maxDistance={maxZoomOut}
     />
   );
@@ -33,6 +35,7 @@ function Controls({ maxZoomOut }: ControlsProps) {
 export default function Scene({
   children,
   cameraDistance = 1500,
+  minZoomIn = 50,
   maxZoomOut = 5000,
 }: SceneProps) {
   return (
@@ -51,7 +54,7 @@ export default function Scene({
       <ambientLight intensity={0.3} />
       <pointLight position={[200, 200, 200]} intensity={1} />
 
-      <Controls maxZoomOut={maxZoomOut} />
+      <Controls minZoomIn={minZoomIn} maxZoomOut={maxZoomOut} />
 
       {children}
     </Canvas>

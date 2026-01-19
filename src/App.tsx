@@ -7,6 +7,7 @@ import Waypoints from './components/canvas/mission/Waypoints';
 import Scene from './components/canvas/Scene';
 import Chief from './components/canvas/spacecraft/Chief';
 import Deputy from './components/canvas/spacecraft/Deputy';
+import ZoomScaleUpdater from './components/canvas/ZoomScaleUpdater';
 import ErrorBoundary from './components/shared/error/ErrorBoundary';
 import MissionErrorHandler from './components/shared/error/MissionErrorHandler';
 import MobileBlocker from './components/shared/MobileBlocker';
@@ -30,8 +31,10 @@ export default function App() {
             <Scene
               key={scenario}
               cameraDistance={scenarioConfig.cameraDistance}
+              minZoomIn={scenarioConfig.minZoomIn}
               maxZoomOut={scenarioConfig.maxZoomOut}
             >
+              <ZoomScaleUpdater />
               <ClickPlane size={scenarioConfig.gridSize} />
               <Grid
                 size={scenarioConfig.gridSize}

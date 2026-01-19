@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { interpolateTrajectory } from '@orbital';
 
-import { useZoomScale } from '@hooks/useZoomScale';
+import { useScale } from '@hooks/useScale';
 import { useMissionStore } from '@stores/mission';
 import { useSimulationStore } from '@stores/simulation';
 import { ricToPosition } from '@utils/coordinates';
@@ -10,7 +10,7 @@ import { ricToPosition } from '@utils/coordinates';
 import { Spacecraft } from './Spacecraft';
 
 export default function Deputy() {
-  const zoomScale = useZoomScale();
+  const scale = useScale();
   const initialPosition = useMissionStore((state) => state.initialPosition);
   const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);
 
@@ -35,7 +35,7 @@ export default function Deputy() {
   return (
     <Spacecraft
       position={ricToPosition(position)}
-      scale={1.8 * zoomScale}
+      scale={1.8 * scale}
       label="Deputy"
       labelColor="#6688ff"
       mainBody={{

@@ -1,10 +1,10 @@
-import { useZoomScale } from '@hooks/useZoomScale';
+import { useScale } from '@hooks/useScale';
 import { useMissionStore } from '@stores/mission';
 
 import Waypoint from './Waypoint';
 
 export default function Waypoints() {
-  const zoomScale = useZoomScale();
+  const scale = useScale();
   const waypoints = useMissionStore((state) => state.waypoints);
   const selectedIndex = useMissionStore((state) => state.selectedWaypointIndex);
   const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
@@ -20,7 +20,7 @@ export default function Waypoints() {
           isSelected={selectedIndex === index}
           onSelect={() => selectWaypoint(index)}
           onDrag={(newPosition) => updateWaypoint(index, newPosition)}
-          scale={zoomScale}
+          scale={scale}
         />
       ))}
     </>
